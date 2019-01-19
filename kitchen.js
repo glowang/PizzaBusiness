@@ -1,49 +1,51 @@
 const notification = require('./notification')
+var exports = module.exports= {};
 
-let orders = new Array();
+exports.orders = new Array();
 
-async function make(order) {
-    let promise = new Promise((resolve,reject) => {
-        setTimeout(() => resolve(order), 10000) // resolve(send notification)
-    })
-    //let result = await promise; // await is followed by a computational intensive, long function? 
-    promise.then(notification.notify(order));
+exports.Pizza = class {
+    constructor(order) {
+        this.phone = order.phone;
+        this.flavor = order.flavor;
+        this.ordertime = order.time;
+        this.email = order.email;
+        this.status = false;
+    } 
+
+    async make() {
+        const me = this;
+        let promise = new Promise((resolve,reject) => {
+            setTimeout(() => resolve(this.email), 25000) // resolve(send notification)
+        })
+        promise.then(function(result) {
+            try {
+                me.status = true;
+                console.log(me.status);
+            } catch {
+                console.log(me);
+            }
+        })
+        promise.then(notification.notify(me.email));
+    }
 }
 
-function checkOrder(phone) {
-    orders.forEach(element => {
-        try {
+exports.placeOrder = function(order) {
+    const p = new exports.Pizza(order);
+    exports.orders.push(p);
+    p.make();
+}
+
+exports.checkStatus = function(phone) {
+    try {
+        exports.orders.forEach(element => {
             if (element.phone === phone) {
-                const orderTime = element.timeStamp;
-                const currTime = moment().valueOf();
-                console.log('the real diff is');
-                console.log(currTime-orderTime);
-                if (currTime - orderTime < 0) {
-                    console.log("two");
-                    res.send("system error")
-                    console.error("Wrong order time");
-                }
-                else if (currTime - orderTime < 15000) {
-                    console.log("three");
-                    res.send("Dough-prepping");
-                }
-                else if (currTime - orderTime < 30000) {
-                    console.log("four");
-                    res.send("oven-bake");
-                }
-                else if (currTime - orderTime < 50000) {
-                    console.log("five");
-                    res.send("topping-art"); 
-                }
-                else if (currTime - orderTime > 50000) {
-                    console.log("five");
-                    res.send("Ready for pick up!");
-                }
-            } 
-        } catch(err) {
-            console.log("six");
-            res.render("order_form"); // use ejs to change the title
-        }
-       
-    })
+                console.log(element.phone);
+                console.log(element.status);
+                return element.status;
+            }
+        })
+    }
+    catch {
+        console.log(err);
+    }
 }

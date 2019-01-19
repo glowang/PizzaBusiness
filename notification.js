@@ -1,22 +1,25 @@
 const nodemailer = require('nodemailer');
+var exports = module.exports= {};
 
-var transporter = nodemailer.createTransport({
+let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'wmytgf1021@gmail.com',
-      pass: '******'
+      user: '****@gmail.com',
+      pass: '****'
     }
   });
 
-function notify(order) {
+exports.notify = function (email) {
+    console.log("DING DONG!");
     let mailOptions = {
-        from: 'wmytgf1021@gmail.com',
-        to: order._email,
-        subject: 'Your '+order._flavor+' pizza is ready for pick up',
-        text: 'This is about to be the best pizza you ever had' 
+        from: '***@gmail.com',
+        to: email,
+        subject: '你的pizza已经做好了',
+        text: 'Ho ho ho ho ho ho ho ho' 
     };
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
+          console.log(email);
           console.log(error);
         } else {
           console.log('Email sent: ' + info.response);

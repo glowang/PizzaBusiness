@@ -28,7 +28,7 @@ buyRouter.get('/', function(req,res) {
 })
 
 /* Middleware function to screen pizza orders */
-buyRouter.post('/', function(req,res,next) { // the path is actually "buy_pizza" already
+buyRouter.post('/', function(req,res,next) { 
     const flavor = req.body._flavor;
     if (flavor === 'meat' || flavor === 'veggie') {
         next();
@@ -46,11 +46,9 @@ buyRouter.post('/', function(req,res) {
         flavor: req.body._flavor,
         timeStamp: moment().valueOf()
     }
-    arr = kitchen.orders;
-    arr.push(order);
     try {
         res.send("Your order has been recorded!");
-        kitchen.make(order);
+        kitchen.placeOrder(order);
     } catch(err) {
         console.log(err)
     };
@@ -63,9 +61,14 @@ serviceRouter.get('/status', function(req,res) {
     res.render('index');
 }) 
 
-app.post('/status', function(req,res) {
+serviceRouter.post('/status', function(req,res) {
     const phone = req.body._phone;
-    kitchen.checkOrder(phone);
+    if (kitchen.checkStatus(phone)) {
+        res.send("It's ready!");
+    } else {
+        console.log(kitchen.checkStatus(phone));
+        res.send("We are still making it");
+    }
 });
 
 serviceRouter.get('/complain', function(req,res) {
