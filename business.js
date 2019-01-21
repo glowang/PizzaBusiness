@@ -99,6 +99,6 @@ serviceRouter.post('/status', function(req,res) {
 
 /** Another API endpoint called /help/complain for customers who wish to contact customer service */
 serviceRouter.get('/complain', function(req,res) {
-    res.send("Please call 5103169699");
+    res.send("Please call 510-XXX-XXXX");
 });
 
