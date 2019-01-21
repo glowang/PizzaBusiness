@@ -4,22 +4,20 @@ var exports = module.exports= {};
 let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: '****@gmail.com',
-      pass: '****'
+      user: 'xxxxx@gmail.com',
+      pass: 'xxxxxx'
     }
   });
 
 exports.notify = function (email) {
-    console.log("DING DONG!");
     let mailOptions = {
-        from: '***@gmail.com',
+        from: 'xxxxx@gmail.com',
         to: email,
-        subject: '你的pizza已经做好了',
-        text: 'Ho ho ho ho ho ho ho ho' 
+        subject: 'Your Pizza is Ready for Pick-up!',
+        text: 'Call us at xxx-xxx-xxxx for questions.' 
     };
     transporter.sendMail(mailOptions, function(error, info){
         if (error) {
-          console.log(email);
           console.log(error);
         } else {
           console.log('Email sent: ' + info.response);

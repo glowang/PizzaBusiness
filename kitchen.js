@@ -1,51 +1,62 @@
 const notification = require('./notification')
-var exports = module.exports= {};
 
-exports.orders = new Array();
-
-exports.Pizza = class {
+/** Pizza Constructor */
+Pizza = class {
     constructor(order) {
         this.phone = order.phone;
         this.flavor = order.flavor;
-        this.ordertime = order.time;
         this.email = order.email;
         this.status = false;
     } 
 
+    /** A pizza takes 25 seconds to make. Once it is ready, an email
+     * notification will be sent out.
+     */
     async make() {
         const me = this;
         let promise = new Promise((resolve,reject) => {
-            setTimeout(() => resolve(this.email), 25000) // resolve(send notification)
+            setTimeout(() => resolve(this.email), 10000) 
         })
         promise.then(function(result) {
             try {
                 me.status = true;
-                console.log(me.status);
             } catch {
-                console.log(me);
+                console.log('pizza is '+ me);
             }
         })
         promise.then(notification.notify(me.email));
     }
 }
 
-exports.placeOrder = function(order) {
-    const p = new exports.Pizza(order);
-    exports.orders.push(p);
-    p.make();
-}
 
-exports.checkStatus = function(phone) {
+/** A function that triggers the make function to make pizza */
+Manager = class {
+    constructor() {
+        this.orders = new Array();
+        this.answer = false;
+    }; 
+    placeOrder (order) {
+        const p = new Pizza(order);
+        this.orders.push(p);
+        p.make();
+    }
+
+/** Responds to customer's inquiry on pizza status. Two statuses 
+ * are possible: done or still making the pizza. 
+ */
+    checkStatus (phone) {
     try {
-        exports.orders.forEach(element => {
+        this.orders.forEach(element => {
             if (element.phone === phone) {
-                console.log(element.phone);
-                console.log(element.status);
-                return element.status;
+                this.answer = element.status;
             }
         })
-    }
-    catch {
+            return this.answer;
+        } catch (err) {
         console.log(err);
     }
 }
+}
+
+manager = new Manager();
+module.exports = manager;
